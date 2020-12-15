@@ -18,7 +18,7 @@ TOKEN = 'Nzg0NTMwNzQ3MjQ2NjQxMTU0.X8qpMg.ycXchNKGfTmKZANjYL9wl9UH4Cg'
 bot = commands.Bot(command_prefix='!')
 
 #クロッキー時間
-croquis_sec = 5
+croquis_sec = 30
 
 #上限枚数
 max_sheets = 50
