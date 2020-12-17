@@ -8,29 +8,24 @@ import asyncio
 from discord.ext import commands
 
 
-#PixabayのTOKEN
-PIXABAY_TOKENURL = 'https://pixabay.com/api/?key=19427820-6d1c3ed4dc68a0f357a5f6c84'
+#PixabayのURL
+PIXABAY_URL = 'https://pixabay.com/api/?key=19427820-6d1c3ed4dc68a0f357a5f6c84'
 
 # BotのTOKEN
 TOKEN = 'Nzg0NTMwNzQ3MjQ2NjQxMTU0.X8qpMg.ycXchNKGfTmKZANjYL9wl9UH4Cg'
 
-# 接続に必要なオブジェクトを生成
 bot = commands.Bot(command_prefix='!')
 
 #クロッキー時間
 croquis_sec = 30
 
-#上限枚数
-max_sheets = 50
+#取得枚数
+max_sheets = 200
 
 #起動時の動作
 @bot.event
 async def on_ready():
     print('ログインしました')
-
-@bot.command()
-async def test(ctx, arg):
-    await ctx.send(arg)
 
 #クロッキー秒数変更
 @bot.command()
@@ -56,13 +51,23 @@ async def start(ctx, *args):
     #イメージタイプの指定
     image_type = "&image_type=photo"
 
-    #上限枚数の指定
+    #取得枚数の指定
     per_page = "&per_page=" + str(max_sheets)
 
-    url = PIXABAY_TOKENURL + queries + image_type + per_page
+    url = PIXABAY_URL + queries + image_type + per_page
 
-    #urlの確認
-    #await ctx.channel.send(url)
+    #合計取得数の取得
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as r:
+            if r.status == 200:
+                js_tmp = await r.json()
+                total = js_tmp["total"]
+
+    #表示ページ数の指定
+    rand_page = random.randrange(int(total / max_sheets))
+    page = "&page=" + str(rand_page)
+
+    url = PIXABAY_URL + queries + image_type + per_page + page
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as r:
@@ -77,16 +82,6 @@ async def start(ctx, *args):
 
                 await ctx.channel.send("上限枚数に到達した為、動作を停止します")
 
-
-
-# メッセージ受信時に動作する処理
-@bot.event
-async def on_message(message):
-    # メッセージ送信者がBotだった場合は無視する
-    if message.author.bot:
-        return
-        
-    await bot.process_commands(message)
 
 # Botの起動とDiscordサーバーへの
 # 接続
