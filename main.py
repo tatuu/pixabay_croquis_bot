@@ -9,10 +9,10 @@ from discord.ext import commands
 
 
 #PixabayのURL
-PIXABAY_URL = 'https://pixabay.com/api/?key=19427820-6d1c3ed4dc68a0f357a5f6c84'
+PIXABAY_URL = 'https://pixabay.com/api/?key='
 
 # BotのTOKEN
-TOKEN = 'Nzg0NTMwNzQ3MjQ2NjQxMTU0.X8qpMg.ycXchNKGfTmKZANjYL9wl9UH4Cg'
+TOKEN = ''
 
 bot = commands.Bot(command_prefix='!')
 
